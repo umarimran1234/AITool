@@ -4,15 +4,14 @@ import ReactMarkdown from "react-markdown";
 function App() {
   const [topic, setTopic] = useState("");
   const [difficulty, setDifficulty] = useState("Easy");
-  const [questions, setQuestions] = useState([]); // Store multiple questions
+  const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
-  console.log(difficulty);
+  const [extraText, setExtraTExt] = useState();
 
   const handleGenerate = async () => {
     if (!topic.trim()) return alert("⚠️ Please enter a topic!");
 
     setLoading(true);
-    // setQuestions([]); // Clear previous questions before fetching new ones
 
     try {
       const res = await fetch("http://localhost:5000/api/generate-question", {
@@ -23,7 +22,8 @@ function App() {
 
       const data = await res.json();
       console.log("data", data?.question);
-      setQuestions(data?.question || []); // Ensure we set the data to an array
+      setQuestions(data?.question || []);
+      setExtraTExt(data?.introductoryText);
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -77,16 +77,13 @@ function App() {
 
       {Array.isArray(questions) && questions.length > 0 && (
         <div className="mt-10 w-full p-6 rounded-lg shadow-lg">
-          <h2 className="text-6xl font-bold text-gray-200 mb-4 border-b border-gray-600 pb-2">
+          <h2 className="text-6xl font-bold text-center uppercase text-gray-200 mb-4 border-b border-gray-600 pb-2">
             Coding Questions
           </h2>
           <div className="text-lg leading-relaxed text-gray-300">
+            <p className=" mx-3 "> {extraText} </p>
             {questions?.map((q, index) => (
               <div key={index} className="mb-8">
-                <h3 className="text-4xl my-5 font-semibold text-blue-300">
-                  {`Response ${index + 1}`}
-                </h3>
-
                 <div className="mb-6">
                   <h3 className="text-4xl font-semibold text-blue-300">
                     {`Q: ${q?.title}`}
@@ -115,8 +112,6 @@ function App() {
                     </h4>
                     <p className="text-gray-400">{q?.expectedOutput}</p>
                   </div>
-
-                  {/* Optional: If there are inner questions/arrays */}
                 </div>
               </div>
             ))}

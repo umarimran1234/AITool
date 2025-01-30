@@ -40,7 +40,7 @@ Format the response as follows:
    - **Expected Input:** 
    - **Expected Output:** 
 
-(Continue in the same format for at least 4 questions.)`;
+(Continue in the same format  but we do not need unwantedIntroText)`;
 
     const result = await model.generateContent(prompt);
     const responseReturn = result.response.text();
@@ -49,7 +49,7 @@ Format the response as follows:
     const introductoryText = responseReturn.match(unwantedIntroText);
     const cleanResponse = responseReturn.replace(unwantedIntroText, "").trim();
 
-    const questionsArray = responseReturn.split("\n\n\n").map((question) => {
+    const questionsArray = cleanResponse.split("\n\n\n").map((question) => {
       const parts = question.split("\n");
 
       const title = parts[0] ? parts[0].replace(/[^\w\s]/g, "").trim() : "";
