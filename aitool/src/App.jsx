@@ -117,18 +117,6 @@ function App() {
                   </div>
 
                   {/* Optional: If there are inner questions/arrays */}
-                  {q?.innerQuestions && Array.isArray(q?.innerQuestions) && (
-                    <div className="mt-6">
-                      <h4 className="font-semibold text-gray-100">
-                        Additional Questions:
-                      </h4>
-                      {q.innerQuestions.map((innerQ, idx) => (
-                        <div key={idx} className="mt-4">
-                          <p className="text-gray-400">{innerQ}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
               </div>
             ))}

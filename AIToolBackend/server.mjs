@@ -24,7 +24,6 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 const previousResponses = [];
 
 const generateQuestion = async (topic, difficulty) => {
-  console.log(difficulty, "diffculty");
   try {
     const prompt = `Generate ${difficulty} level coding questions on the topic of ${topic}. Provide multiple questions (at least 4), each with a clear problem statement, constraints, expected input, and expected output. 
 Format the response as follows:
@@ -45,28 +44,32 @@ Format the response as follows:
 
     const result = await model.generateContent(prompt);
     const responseReturn = result.response.text();
+    const unwantedIntroText =
+      /These questions require.*|Remember that the input.*|your code should handle.*/gi;
+    const introductoryText = responseReturn.match(unwantedIntroText);
+    const cleanResponse = responseReturn.replace(unwantedIntroText, "").trim();
 
     const questionsArray = responseReturn.split("\n\n\n").map((question) => {
       const parts = question.split("\n");
 
-      const title = parts[0].replace(/^\d+\.\s\*\*(.*?)\*\*$/, "$1").trim();
+      const title = parts[0] ? parts[0].replace(/[^\w\s]/g, "").trim() : "";
       const problemStatement = parts[1]
-        .replace(/- \*\*Problem Statement:\*\*\s*/, "")
-        .trim();
+        ? parts[1].replace(/[^\w\s]/g, "").trim()
+        : "";
       const constraints = parts[2]
-        .replace(/- \*\*Constraints:\*\*\s*/, "")
-        .trim();
+        ? parts[2].replace(/[^\w\s]/g, "").trim()
+        : "";
       const expectedInput = parts[3]
-        .replace(/- \*\*Expected Input:\*\*\s*/, "")
-        .trim();
+        ? parts[3].replace(/[^\w\s]/g, "").trim()
+        : "";
       const expectedOutput = parts[4]
-        .replace(/- \*\*Expected Output:\*\*\s*/, "")
-        .trim();
-
+        ? parts[4].replace(/[^\w\s]/g, "").trim()
+        : "";
       return {
         title,
         problemStatement,
         constraints,
+
         expectedInput,
         expectedOutput,
       };
@@ -74,7 +77,10 @@ Format the response as follows:
 
     previousResponses.push(...questionsArray);
 
-    return questionsArray;
+    return {
+      question: questionsArray,
+      introductoryText: introductoryText ? introductoryText.join(" ") : "",
+    };
   } catch (error) {
     console.error("Error generating question:", error);
     return "Failed to generate question.";
@@ -96,7 +102,10 @@ app.post("/api/generate-question", async (req, res) => {
 
     const result = await generateQuestion(topic, difficulty);
 
-    res.json({ question: result });
+    res.json({
+      question: result.question,
+      introductoryText: result.introductoryText,
+    });
   } catch (error) {
     console.error("API Error:", error);
     res.status(500).json({ error: "Internal Server Error" });
