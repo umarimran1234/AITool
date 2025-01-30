@@ -1,105 +1,139 @@
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import "./App.css";
 
 function App() {
   const [topic, setTopic] = useState("");
   const [difficulty, setDifficulty] = useState("Easy");
-  const [response, setResponse] = useState(null);
+  const [questions, setQuestions] = useState([]); // Store multiple questions
   const [loading, setLoading] = useState(false);
 
   const handleGenerate = async () => {
     if (!topic.trim()) return alert("⚠️ Please enter a topic!");
 
     setLoading(true);
-    setResponse(null); // Clear previous response
+    setQuestions([]); // Clear previous questions before fetching new ones
 
     try {
-      const res = await fetch("http://localhost:5000/api/generate-question", {
+      await fetch("http://localhost:5000/api/generate-question", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ topic, difficulty }),
       });
 
-      const data = await res.json();
-      setResponse(data || { question: "No response from AI." });
+      await GetQuestions();
     } catch (error) {
       console.error("Error:", error);
-      setResponse({ question: "❌ Failed to generate question." });
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
+  const GetQuestions = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/previous-questions", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await res.json();
+      setQuestions(data?.previousQuestions || []);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  console.log(questions[0]);
+
   return (
-    <>
-      <div className="bg-gray-900 min-h-screen flex flex-col justify-center items-center text-white px-4">
-        {/* Main Container */}
-        <div className="max-w-2xl w-full bg-gray-800 p-6 rounded-lg shadow-lg">
-          {/* Heading */}
-          <h1 className="text-5xl font-bold text-center text-gray-200 mb-6 tracking-wide">
-            AI Question Generator 🤖
-          </h1>
+    <div className="min-h-screen bg-[#242424] flex flex-col items-center p-4">
+      <h1 className="text-7xl text-white uppercase font-bold mb-4">
+        Coding Question Generator
+      </h1>
 
-          {/* Input Section */}
-          <div className="space-y-5">
-            {/* Topic Input */}
-            <div>
-              <label className="block text-lg font-medium text-gray-300 mb-1">
-                Topic:
-              </label>
-              <input
-                type="text"
-                placeholder="Enter a topic..."
-                value={topic}
-                onChange={(e) => setTopic(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-600 rounded-md text-white bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
-              />
-            </div>
-
-            {/* Difficulty Dropdown */}
-            <div>
-              <label className="block text-lg font-medium text-gray-300 mb-1">
-                Difficulty:
-              </label>
-              <select
-                value={difficulty}
-                onChange={(e) => setDifficulty(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-600 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-gray-500"
-              >
-                <option value="Easy">🟢 Easy</option>
-                <option value="Medium">🟡 Medium</option>
-                <option value="Hard">🔴 Hard</option>
-              </select>
-            </div>
-
-            {/* Generate Button */}
-            <button
-              onClick={handleGenerate}
-              disabled={loading}
-              className={`w-full py-3 rounded-md text-lg font-semibold tracking-wide transition-all ${
-                loading
-                  ? "bg-gray-500 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-500"
-              }`}
-            >
-              {loading ? "⏳ Generating..." : "Generate Question"}
-            </button>
-          </div>
+      <div className="flex items-center gap-2">
+        <div>
+          <label className="block text-lg font-medium text-white mb-1">
+            Topic:
+          </label>
+          <input
+            type="text"
+            placeholder="Enter a topic..."
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          />
         </div>
 
-        {response && (
-          <div className="mt-10 w-full p-6 bg-gray-800 rounded-lg shadow-lg animate-fadeIn">
-            <h2 className="text-4xl font-bold text-gray-200 mb-4 border-b border-gray-600 pb-2">
-              ✨ Generated Question:
-            </h2>
-            <div className="text-xl leading-relaxed text-gray-300">
-              <ReactMarkdown>{response?.question}</ReactMarkdown>
-            </div>
-          </div>
-        )}
+        <div>
+          <label className="block text-lg font-medium text-white mb-1">
+            Difficulty:
+          </label>
+          <select
+            value={difficulty}
+            onChange={(e) => setDifficulty(e.target.value)}
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          >
+            <option value="Easy">🟢 Easy</option>
+            <option value="Medium">🟡 Medium</option>
+            <option value="Hard">🔴 Hard</option>
+          </select>
+        </div>
       </div>
-    </>
+
+      <button
+        onClick={handleGenerate}
+        className="py-2.5 px-5 mt-4 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700"
+        disabled={loading}
+      >
+        {loading ? "Generating..." : "Generate Question"}
+      </button>
+
+      {questions.length > 0 && (
+        <div className="mt-10 w-full p-6  rounded-lg shadow-lg">
+          <h2 className="text-6xl font-bold text-gray-200 mb-4 border-b border-gray-600 pb-2">
+            Coding Questions
+          </h2>
+          <div className="text-lg leading-relaxed text-gray-300">
+            {questions?.map((q, index) => (
+              <div key={index}>
+                {q?.map((item, idx) => (
+                  <div key={idx} className="mb-6">
+                    <h3 className="text-4xl font-semibold text-blue-300">
+                      {item?.title}
+                    </h3>
+                    <p className="mt-2 text-lg leading-relaxed">
+                      {item?.problemStatement}
+                    </p>
+
+                    <div className="mt-4">
+                      <h4 className="font-semibold text-gray-100">
+                        Constraints:
+                      </h4>
+                      <p className="text-gray-400">{item?.constraints}</p>
+                    </div>
+
+                    <div className="mt-4">
+                      <h4 className="font-semibold text-gray-100">
+                        Expected Input:
+                      </h4>
+                      <p className="text-gray-400">{item?.expectedInput}</p>
+                    </div>
+
+                    <div className="mt-4">
+                      <h4 className="font-semibold text-gray-100">
+                        Expected Output:
+                      </h4>
+                      <p className="text-gray-400">{item?.expectedOutput}</p>
+                    </div>
+
+                    {/* Loop through the inner array (if it exists) */}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 

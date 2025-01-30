@@ -41,9 +41,36 @@ Format the response as follows:
 
     const result = await model.generateContent(prompt);
     const responseReturn = result.response.text();
-    previousResponses.push(responseReturn);
 
-    return responseReturn;
+    const questionsArray = responseReturn.split("\n\n\n").map((question) => {
+      const parts = question.split("\n");
+
+      const title = parts[0].replace(/^\d+\.\s\*\*(.*?)\*\*$/, "$1").trim();
+      const problemStatement = parts[1]
+        .replace(/- \*\*Problem Statement:\*\*\s*/, "")
+        .trim();
+      const constraints = parts[2]
+        .replace(/- \*\*Constraints:\*\*\s*/, "")
+        .trim();
+      const expectedInput = parts[3]
+        .replace(/- \*\*Expected Input:\*\*\s*/, "")
+        .trim();
+      const expectedOutput = parts[4]
+        .replace(/- \*\*Expected Output:\*\*\s*/, "")
+        .trim();
+
+      return {
+        title,
+        problemStatement,
+        constraints,
+        expectedInput,
+        expectedOutput,
+      };
+    });
+
+    previousResponses.push(questionsArray);
+
+    return questionsArray;
   } catch (error) {
     console.error("Error generating question:", error);
     return "Failed to generate question.";
