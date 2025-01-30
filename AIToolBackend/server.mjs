@@ -4,7 +4,12 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import cors from "cors";
 dotenv.config();
+
 const app = express();
+const PORT = process.env.PORT || 5000;
+
+app.use(express.json());
+app.use(bodyParser.json());
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -12,15 +17,14 @@ app.use(
     allowedHeaders: "Content-Type",
   })
 );
-const PORT = process.env.PORT || 5000;
-
-app.use(express.json());
-app.use(bodyParser.json());
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
 const previousResponses = [];
+
 const generateQuestion = async (topic, difficulty) => {
+  console.log(difficulty, "diffculty");
   try {
     const prompt = `Generate ${difficulty} level coding questions on the topic of ${topic}. Provide multiple questions (at least 4), each with a clear problem statement, constraints, expected input, and expected output. 
 Format the response as follows:
@@ -68,7 +72,7 @@ Format the response as follows:
       };
     });
 
-    previousResponses.push(questionsArray);
+    previousResponses.push(...questionsArray);
 
     return questionsArray;
   } catch (error) {
@@ -76,13 +80,14 @@ Format the response as follows:
     return "Failed to generate question.";
   }
 };
+
 app.get("/api/previous-questions", (req, res) => {
   res.json({ previousQuestions: previousResponses });
 });
+
 app.post("/api/generate-question", async (req, res) => {
   try {
     const { topic, difficulty } = req.body;
-
     if (!topic || !difficulty) {
       return res
         .status(400)
@@ -90,6 +95,7 @@ app.post("/api/generate-question", async (req, res) => {
     }
 
     const result = await generateQuestion(topic, difficulty);
+
     res.json({ question: result });
   } catch (error) {
     console.error("API Error:", error);

@@ -6,42 +6,30 @@ function App() {
   const [difficulty, setDifficulty] = useState("Easy");
   const [questions, setQuestions] = useState([]); // Store multiple questions
   const [loading, setLoading] = useState(false);
+  console.log(difficulty);
 
   const handleGenerate = async () => {
     if (!topic.trim()) return alert("⚠️ Please enter a topic!");
 
     setLoading(true);
-    setQuestions([]); // Clear previous questions before fetching new ones
+    // setQuestions([]); // Clear previous questions before fetching new ones
 
     try {
-      await fetch("http://localhost:5000/api/generate-question", {
+      const res = await fetch("http://localhost:5000/api/generate-question", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ topic, difficulty }),
       });
 
-      await GetQuestions();
+      const data = await res.json();
+      console.log("data", data?.question);
+      setQuestions(data?.question || []); // Ensure we set the data to an array
     } catch (error) {
       console.error("Error:", error);
     } finally {
       setLoading(false);
     }
   };
-
-  const GetQuestions = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/previous-questions", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      const data = await res.json();
-      setQuestions(data?.previousQuestions || []);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-  console.log(questions[0]);
 
   return (
     <div className="min-h-screen bg-[#242424] flex flex-col items-center p-4">
@@ -72,9 +60,9 @@ function App() {
             onChange={(e) => setDifficulty(e.target.value)}
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
           >
-            <option value="Easy">🟢 Easy</option>
-            <option value="Medium">🟡 Medium</option>
-            <option value="Hard">🔴 Hard</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
           </select>
         </div>
       </div>
@@ -87,47 +75,61 @@ function App() {
         {loading ? "Generating..." : "Generate Question"}
       </button>
 
-      {questions.length > 0 && (
-        <div className="mt-10 w-full p-6  rounded-lg shadow-lg">
+      {Array.isArray(questions) && questions.length > 0 && (
+        <div className="mt-10 w-full p-6 rounded-lg shadow-lg">
           <h2 className="text-6xl font-bold text-gray-200 mb-4 border-b border-gray-600 pb-2">
             Coding Questions
           </h2>
           <div className="text-lg leading-relaxed text-gray-300">
             {questions?.map((q, index) => (
-              <div key={index}>
-                {q?.map((item, idx) => (
-                  <div key={idx} className="mb-6">
-                    <h3 className="text-4xl font-semibold text-blue-300">
-                      {item?.title}
-                    </h3>
-                    <p className="mt-2 text-lg leading-relaxed">
-                      {item?.problemStatement}
-                    </p>
+              <div key={index} className="mb-8">
+                <h3 className="text-4xl my-5 font-semibold text-blue-300">
+                  {`Response ${index + 1}`}
+                </h3>
 
-                    <div className="mt-4">
-                      <h4 className="font-semibold text-gray-100">
-                        Constraints:
-                      </h4>
-                      <p className="text-gray-400">{item?.constraints}</p>
-                    </div>
+                <div className="mb-6">
+                  <h3 className="text-4xl font-semibold text-blue-300">
+                    {`Q: ${q?.title}`}
+                  </h3>
+                  <p className="mt-2 text-lg leading-relaxed text-gray-400">
+                    {q?.problemStatement}
+                  </p>
 
-                    <div className="mt-4">
-                      <h4 className="font-semibold text-gray-100">
-                        Expected Input:
-                      </h4>
-                      <p className="text-gray-400">{item?.expectedInput}</p>
-                    </div>
-
-                    <div className="mt-4">
-                      <h4 className="font-semibold text-gray-100">
-                        Expected Output:
-                      </h4>
-                      <p className="text-gray-400">{item?.expectedOutput}</p>
-                    </div>
-
-                    {/* Loop through the inner array (if it exists) */}
+                  <div className="mt-4">
+                    <h4 className="font-semibold text-gray-100">
+                      Constraints:
+                    </h4>
+                    <p className="text-gray-400">{q?.constraints}</p>
                   </div>
-                ))}
+
+                  <div className="mt-4">
+                    <h4 className="font-semibold text-gray-100">
+                      Expected Input:
+                    </h4>
+                    <p className="text-gray-400">{q?.expectedInput}</p>
+                  </div>
+
+                  <div className="mt-4">
+                    <h4 className="font-semibold text-gray-100">
+                      Expected Output:
+                    </h4>
+                    <p className="text-gray-400">{q?.expectedOutput}</p>
+                  </div>
+
+                  {/* Optional: If there are inner questions/arrays */}
+                  {q?.innerQuestions && Array.isArray(q?.innerQuestions) && (
+                    <div className="mt-6">
+                      <h4 className="font-semibold text-gray-100">
+                        Additional Questions:
+                      </h4>
+                      {q.innerQuestions.map((innerQ, idx) => (
+                        <div key={idx} className="mt-4">
+                          <p className="text-gray-400">{innerQ}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>
