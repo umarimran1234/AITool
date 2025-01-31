@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
 function App() {
@@ -7,7 +7,6 @@ function App() {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [extraText, setExtraTExt] = useState();
-
   const handleGenerate = async () => {
     if (!topic.trim()) return alert("⚠️ Please enter a topic!");
 
@@ -32,7 +31,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#242424] flex flex-col items-center p-4">
+    <div className="h-full justify-center bg-[#242424] flex flex-col items-center p-4">
       <h1 className="text-7xl text-white uppercase font-bold mb-4">
         Coding Question Generator
       </h1>
@@ -82,39 +81,63 @@ function App() {
           </h2>
           <div className="text-lg leading-relaxed text-gray-300">
             <p className=" mx-3 "> {extraText} </p>
-            {questions?.map((q, index) => (
-              <div key={index} className="mb-8">
-                <div className="mb-6">
-                  <h3 className="text-4xl font-semibold text-blue-300">
-                    {`Q: ${q?.title}`}
-                  </h3>
-                  <p className="mt-2 text-lg leading-relaxed text-gray-400">
-                    {q?.problemStatement}
-                  </p>
+            {loading === true ? (
+              <div className=" flex justify-center ">
+                <svg
+                  role="status"
+                  className="w-70 h-70 mr-2 text-gray-200 animate-spin fill-blue-600"
+                  viewBox="0 0 100 101"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlnsXlink="http://www.w3.org/1999/xlink"
+                  preserveAspectRatio="xMidYMid meet"
+                  height="80"
+                  width="80"
+                >
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="15"
+                    d="M50 10C29.05 10 15 24.81 15 40C15 55.19 29.05 70 50 70C70.95 70 85 55.19 85 40C85 24.81 70.95 10 50 10ZM50 10L50 10C50 10 50 10 50 10ZM50 10C29.05 10 15 24.81 15 40C15 55.19 29.05 70 50 70C70.95 70 85 55.19 85 40C85 24.81 70.95 10 50 10Z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </div>
+            ) : (
+              questions?.map((q, index) => (
+                <div key={index} className="mb-8  ">
+                  <div className="mb-6">
+                    <h3 className="text-4xl font-semibold text-blue-300">
+                      {`Q: ${q?.title}`}
+                    </h3>
+                    <p className="mt-2 text-lg leading-relaxed text-gray-400">
+                      {q?.problemStatement}
+                    </p>
 
-                  <div className="mt-4">
-                    <h4 className="font-semibold text-gray-100">
-                      Constraints:
-                    </h4>
-                    <p className="text-gray-400">{q?.constraints}</p>
-                  </div>
+                    <div className="mt-4">
+                      <h4 className="font-semibold text-gray-100">
+                        Constraints:
+                      </h4>
+                      <p className="text-gray-400">{q?.constraints}</p>
+                    </div>
 
-                  <div className="mt-4">
-                    <h4 className="font-semibold text-gray-100">
-                      Expected Input:
-                    </h4>
-                    <p className="text-gray-400">{q?.expectedInput}</p>
-                  </div>
+                    <div className="mt-4">
+                      <h4 className="font-semibold text-gray-100">
+                        Expected Input:
+                      </h4>
+                      <p className="text-gray-400">{q?.expectedInput}</p>
+                    </div>
 
-                  <div className="mt-4">
-                    <h4 className="font-semibold text-gray-100">
-                      Expected Output:
-                    </h4>
-                    <p className="text-gray-400">{q?.expectedOutput}</p>
+                    <div className="mt-4">
+                      <h4 className="font-semibold text-gray-100">
+                        Expected Output:
+                      </h4>
+                      <p className="text-gray-400">{q?.expectedOutput}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       )}
