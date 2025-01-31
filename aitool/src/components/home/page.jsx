@@ -240,7 +240,7 @@ function Home() {
           </div>
         ) : (
           <div className="mt-10 w-full p-6 rounded-lg shadow-lg text-center text-gray-300">
-            <h2 className="text-4xl font-semibold text-red-300 font-bold ">
+            <h2 className="text-4xl uppercase text-red-300 font-bold ">
               No questions found
             </h2>
             <p className="text-lg mt-2">
