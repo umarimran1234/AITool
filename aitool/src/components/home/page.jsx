@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
 import Header from "./header";
+import Hero from "./hero";
 function Home() {
   const [topic, setTopic] = useState("");
   const [difficulty, setDifficulty] = useState("");
@@ -85,8 +86,31 @@ function Home() {
   return (
     <>
       <Header />
+      {/* <Hero /> */}
       <div className=" h-full justify-center mt-36 bg-[#242424] flex flex-col items-center p-4">
-        <h1 className="lg:text-7xl text-4xl  text-center text-white uppercase font-bold mb-4">
+        <a
+          href="#"
+          className="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
+          role="alert"
+        >
+          <span className="text-xs bg-primary-600 rounded-full text-black px-4 py-1.5 mr-3">
+            New
+          </span>
+          <span className="text-sm font-medium">Learn width AI</span>
+          <svg
+            className="ml-2 w-5 h-5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fillRule="evenodd"
+              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+              clipRule="evenodd"
+            ></path>
+          </svg>
+        </a>
+        <h1 className="lg:text-7xl py-2 text-4xl  text-center text-white uppercase font-bold mb-4">
           Coding Question Generator
         </h1>
 
