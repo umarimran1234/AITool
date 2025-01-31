@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import ReactMarkdown from "react-markdown";
+import { useState } from "react";
+// import ReactMarkdown from "react-markdown";
 
 function App() {
   const [topic, setTopic] = useState("");
@@ -32,7 +32,7 @@ function App() {
 
   return (
     <div className="h-full justify-center bg-[#242424] flex flex-col items-center p-4">
-      <h1 className="text-7xl text-white uppercase font-bold mb-4">
+      <h1 className="text-7xl  text-white uppercase font-bold mb-4">
         Coding Question Generator
       </h1>
 
