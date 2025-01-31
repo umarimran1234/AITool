@@ -12,12 +12,16 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: `${process.env.ORIGIN_ACCEPT}`,
     methods: "GET,POST",
     allowedHeaders: "Content-Type",
   })
 );
-
+if (!process.env.GEMINI_API_KEY) {
+  throw new Error(
+    "GEMINI_API_KEY is missing. Please set the API key in the environment variables."
+  );
+}
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
@@ -83,7 +87,7 @@ Format the response as follows:
     };
   } catch (error) {
     console.error("Error generating question:", error);
-    return "Failed to generate question.";
+    throw new Error("Failed to generate question.");
   }
 };
 
@@ -99,7 +103,14 @@ app.post("/api/generate-question", async (req, res) => {
         .status(400)
         .json({ error: "Topic and difficulty are required!" });
     }
+    const isMeaningfulTopic =
+      /^[A-Za-z\s]+$/.test(topic.trim()) && topic.length > 2; // Check for alphabets and length > 2
 
+    if (!isMeaningfulTopic) {
+      return res
+        .status(400)
+        .json({ error: "Invalid Topic: Please provide a valid topic." });
+    }
     const result = await generateQuestion(topic, difficulty);
 
     res.json({
@@ -108,7 +119,7 @@ app.post("/api/generate-question", async (req, res) => {
     });
   } catch (error) {
     console.error("API Error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: "Internal Server Error", error });
   }
 });
 
