@@ -1,6 +1,6 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import Home from "./components/home/page";
 import Signin from "./components/signin/page";
 

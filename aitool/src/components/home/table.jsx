@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -22,7 +22,7 @@ const DynamicTable = ({ data }) => {
   }, [data, searchQuery]);
 
   const columns = useMemo(() => {
-    if (!filteredData || filteredData.length === 0) return [];
+    if (!filteredData || filteredData?.length === 0) return [];
     return Object.keys(filteredData[0]).map((key) => ({
       accessorKey: key,
       header: key.charAt(0).toUpperCase() + key.slice(1),

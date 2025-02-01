@@ -33,7 +33,7 @@ const BeautifulForm = () => {
     handleSubmit,
     reset,
 
-    formState: { errors, isSubmitted, isSubmitSuccessful, isSubmitting },
+    formState: { errors, isSubmitted, isSubmitSuccessful },
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
@@ -170,7 +170,7 @@ const BeautifulForm = () => {
               className="w-full bg-black text-white p-2 rounded hover:bg-blue-700 transition"
             >
               {(isSubmitSuccessful && "Form Submitted Successfully!") ||
-                (isSubmitted && "Submit form")}
+                (isSubmitted ? "Submit form" : "not submit")}
               Submit
             </button>
           </form>

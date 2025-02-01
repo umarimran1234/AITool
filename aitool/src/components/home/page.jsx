@@ -66,13 +66,13 @@ function Home() {
         if (/^(true|false)$/i.test(part)) {
           return (
             <span key={index} className=" text-white font-bold px-1">
-              "{part}"
+              {`"${part}"`}
             </span>
           );
         } else if (/^\d+$/.test(part)) {
           return (
             <span key={index} className="  text-white font-bold  px-0.5">
-              "{part}"
+              {`"${part}"`}
             </span>
           );
         } else if (/\b[a-zA-Z]+\d+\b/.test(part)) {
