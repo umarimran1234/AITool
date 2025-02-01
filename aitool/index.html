@@ -6,6 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="/dist/styles.css" rel="stylesheet" />
     <title>Vite + React</title>
+    <style>
+      body {
+        background: linear-gradient(45deg, #3b82f6, black, #ec4899);
+        background-size: 200% 200%;
+        animation: gradientAnimation 15s ease infinite;
+
+        min-height: 100vh;
+      }
+
+      @keyframes gradientAnimation {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

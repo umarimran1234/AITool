@@ -1,7 +1,11 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
 import Header from "./header";
-import Hero from "./hero";
+// import Hero from "./hero";
+import BeautifulForm from "./Form";
+// import MyTable from "./table";
+// import BeautifulTable from "./table";
+// import DynamicTable from "./table";
 function Home() {
   const [topic, setTopic] = useState("");
   const [difficulty, setDifficulty] = useState("");
@@ -82,14 +86,19 @@ function Home() {
         return <span key={index}>{part}</span>;
       });
   };
-
+  // const dummyData = [
+  //   { id: 1, name: "Umar TKD", age: 25, country: "Pakistan" },
+  //   { id: 2, name: "Ali Khan", age: 30, country: "India" },
+  //   { id: 3, name: "Sara Ahmed", age: 22, country: "USA" },
+  //   { id: 4, name: "John Doe", age: 35, country: "Canada" },
+  // ];
   return (
     <>
       <Header />
       {/* <Hero /> */}
 
-      <div className="absolute top-0 -z-10  left-0 w-full h-full animate-gradient bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-40"></div>
-      <div className=" z-10       h-full  bg-gradient-to-t  via-black from-black-900  to-blue-900 bg-black justify-center   flex flex-col items-center p-4">
+      {/* <div className="absolute top-0 -z-10  left-0 w-full h-full animate-gradient bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-40"></div> */}
+      <div className=" z-10       h-full   justify-center   flex flex-col items-center p-4">
         <div className=" mt-36 text-center ">
           <a
             href="#"
@@ -253,6 +262,10 @@ function Home() {
           </div>
         )}
       </div>
+      <BeautifulForm />
+      {/* <div className="  mx-9 my-9 ">
+        <DynamicTable data={dummyData} />
+      </div> */}
     </>
   );
 }

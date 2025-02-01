@@ -8,15 +8,15 @@ function Header() {
         <div className="flex bg-black  text-white text-center justify-center ">
           <marquee behavior="scroll" direction="left">
             <p className=" uppercase ">
-              GENERATE YOUR AI QUESTIONS WITH CHoratechsolose AI
+              GENERATE YOUR AI QUESTIONS WITH Cortechsolose AI
             </p>
           </marquee>
         </div>
         <nav className="bg-transparent backdrop-blur  text-white  w-full border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
           <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-            <a href="https://flowbite.com" className="flex items-center">
+            <a href="#" className="flex items-center">
               <span className="self-center uppercase text-xl font-semibold whitespace-nowrap dark:text-white">
-                CHoratechsolose AI
+                Cortechsolose AI
               </span>
             </a>
             <div className="flex items-center lg:order-2">
