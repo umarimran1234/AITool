@@ -35,7 +35,21 @@
   }
 }
 
+body {
+  font-family: "Poppins", sans-serif;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Poppins", sans-serif;
+}
 .animate-gradient {
   background-size: 200% 200%;
   animation: gradientAnimation 6s ease infinite;
+}
+.signup {
+  background-color: hsl(0, 0%, 14.9%);
 }

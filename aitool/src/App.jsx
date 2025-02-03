@@ -1,8 +1,7 @@
 // import { useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+
 // import Swal from "sweetalert2";
 import Home from "./components/home/page";
-import Signin from "./components/signin/page";
 
 function App() {
   // const [topic, setTopic] = useState("");
@@ -74,12 +73,7 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route index element={<Home />}></Route>
-          <Route path="/login" element={<Signin />}></Route>
-        </Routes>
-      </BrowserRouter>
+      <Home />
     </>
   );
 }

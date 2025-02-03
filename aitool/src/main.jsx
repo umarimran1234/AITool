@@ -1,13 +1,22 @@
-// import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import React from "react";
-// import { Routes, Route } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./App.jsx";
-// import { BrowserRouter } from "react-router-dom";
-// import Signin from "./components/signin/page.jsx";
-createRoot(document.getElementById("root")).render(
+
+import Signin from "./components/signin/page.jsx";
+import BeautifulForm from "./components/home/Form.jsx";
+
+const root = createRoot(document.getElementById("root")); // Create the root using createRoot
+
+root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/login" element={<Signin />} />
+        <Route path="/Signup" element={<BeautifulForm />} />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );

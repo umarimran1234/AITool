@@ -7,7 +7,7 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 
-const DynamicTable = ({ data }) => {
+const DynamicTable = ({ data, rol }) => {
   const [sorting, setSorting] = useState([]);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -42,7 +42,7 @@ const DynamicTable = ({ data }) => {
   return (
     <div className="p-6 bg-white shadow-lg rounded-lg">
       <h2 className="text-2xl uppercase font-semibold mb-4 text-center">
-        register user lists
+        {rol === "login" ? "login users" : "registered"}
       </h2>
 
       <input
