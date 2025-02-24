@@ -7,8 +7,7 @@ import App from "./App.jsx";
 import Signin from "./components/signin/page.jsx";
 import BeautifulForm from "./components/home/Form.jsx";
 
-const root = createRoot(document.getElementById("root")); // Create the root using createRoot
-
+const root = createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>

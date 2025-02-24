@@ -171,7 +171,6 @@ export default function Signin() {
               <div className="flex items-center flex-col space-y-2">
                 {signupPRodivders.map((item, index) => {
                   return (
-                    // Add return statement to render each button
                     <button
                       key={index}
                       className={`flex gap-3 cursor-pointer transparent-button items-center justify-center ${
